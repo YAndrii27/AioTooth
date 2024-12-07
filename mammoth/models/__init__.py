@@ -4,7 +4,17 @@ from .acount import Account, AccountWithSource, CredentialAccount
 from .familiar_followers import FamiliarFollowers
 from .featured_tag import FeaturedTag
 from .relationship import Relationship
-from .status import Status, StatusMentions, StatusTag
+from .status import (
+    Status,
+    StatusMentions,
+    StatusTag,
+    ScheduledStatus,
+    Translation,
+    StatusEdit,
+    StatusSource
+)
+from .poll import Poll, NewPoll
+from .context import Context
 
 __all__ = [
     "Field",
@@ -18,4 +28,11 @@ __all__ = [
     "Status",
     "StatusMentions",
     "StatusTag",
+    "ScheduledStatus",
+    "Poll",
+    "NewPoll",
+    "Context",
+    "Translation",
+    "StatusEdit",
+    "StatusSource"
 ]

@@ -8,6 +8,7 @@ from ..poll import Poll
 from ..custom_emoji import CustomEmoji
 from . import StatusMentions, StatusTag
 from ..acount import Account
+from ..filter_result import FilterResult
 
 
 class Status(BaseModel):
@@ -18,8 +19,8 @@ class Status(BaseModel):
     content: str
     visibility: StatusVisibility
     sensitive: bool
-    spoiler_text: str
-    media_attachments: str
+    spoiler_text: Optional[str]
+    media_attachments: list[str]
     application: Optional[dict[str, str | None]]
     mentions: list[StatusMentions]
     tags: list[StatusTag]
@@ -32,13 +33,13 @@ class Status(BaseModel):
     in_reply_to_account_id: Optional[str]
     reblog: Optional[Self]
     poll: Optional[Poll]
-    card: PreviewCard
+    card: Optional[PreviewCard]
     language: Optional[str]
-    text: Optional[str]
+    text: Optional[str] = None
     edited_at: Optional[datetime]
     favourited: Optional[bool]
     reblogged: Optional[bool]
     muted: Optional[bool]
     bookmarked: Optional[bool]
     pinned: Optional[bool]
-    filtered: Optional[bool]
+    filtered: Optional[list[FilterResult]]

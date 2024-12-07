@@ -11,12 +11,13 @@ from ._exceptions import (
     UnprocessableEntity,
     ServiceUnavailable
 )
-from .resources.accounts import Accounts
+from .resources import Accounts, Statuses, Profiles
 from .enums import HttpMethods
 
 query_param_values = Union[str, list[str], bool, int]
 post_data_values = Union[
     str,
+    int,
     bool,
     list[str],
     bytes,
@@ -24,7 +25,7 @@ post_data_values = Union[
     BaseModel,
     list[BaseModel],
     dict[str, BaseModel],
-    None
+    None,
 ]
 
 
@@ -47,17 +48,19 @@ class MastodonClient:
     ):
         self.instance_url = instance_url
         self.api_version = api_version
-        self.api_url = f"https://{instance_url}/api/{api_version}"
+        self.api_url = f"http://{instance_url}/api/{api_version}"
         self.headers = {
             "Authorization": f"Bearer {account_token}"
         }
 
         if httpx_session is None:
-            httpx_session = httpx.AsyncClient()
+            httpx_session = httpx.AsyncClient(verify=False)
 
         self.session = httpx_session
 
         self.account = Accounts(self)
+        self.profile = Profiles(self)
+        self.statuses = Statuses(self)
 
     async def __call__(
             self: MastodonClient,
@@ -67,7 +70,8 @@ class MastodonClient:
             url_parameters: Optional[tuple[str, ...]] = None,
             query_parameters: Optional[dict[str, query_param_values]] = None,
             post_data: Optional[dict[str, post_data_values]] = None,
-            files: Optional[dict[str, bytes]] = None
+            files: Optional[dict[str, bytes]] = None,
+            custom_headers: Optional[dict[str, str]] = None,
     ) -> dict[str, Any]:
         _url_parameters: str = ""
 
@@ -81,10 +85,15 @@ class MastodonClient:
             _url_parameters,
         ))
 
+        if custom_headers:
+            headers = self.headers | custom_headers
+        else:
+            headers = self.headers
+
         response = await self.session.request(
             http_method.value,
             full_url,
-            headers=self.headers,
+            headers=headers,
             params=query_parameters,
             data=post_data,
             files=files,

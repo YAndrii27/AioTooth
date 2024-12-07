@@ -12,7 +12,7 @@ class Poll(BaseModel):
     multiple: bool
     votes_count: int
     voters_count: Optional[int]
-    options: list
+    options: list[str]
     emoji: CustomEmoji
     voted: Optional[bool]
     own_votes: Optional[list[int]]

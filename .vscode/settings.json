@@ -1,13 +1,15 @@
 {
     "cSpell.words": [
         "blurhash",
+        "favourite",
         "favourites",
         "httpx",
         "pydantic",
         "reblog",
         "reblogged",
         "reblogs",
-        "shortcode"
+        "shortcode",
+        "unfavourite"
     ],
     "python.analysis.typeCheckingMode": "strict"
 }
