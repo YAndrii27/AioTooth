@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Any, Union, TYPE_CHECKING
+from typing import Optional, Any, Union, TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from ..client import MastodonClient
@@ -29,12 +29,15 @@ class Accounts(BaseAPI):
         super().__init__(client)
 
     async def verify_credentials(self: Accounts) -> CredentialAccount:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
+            CredentialAccount,
             "verify_credentials"
         )
-        return CredentialAccount.model_validate(_json)
+        # TODO: Think of better ways to ensure types are correct here
+        result = cast(CredentialAccount, await session())
+        return result
 
     async def update_credentials(
             self: Accounts,
@@ -62,9 +65,10 @@ class Accounts(BaseAPI):
         if header:
             files["header"] = header
 
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.PATCH,
             "accounts",
+            AccountWithSource,
             "update_credentials",
             post_data={
                 "display_name": display_name,
@@ -77,77 +81,97 @@ class Accounts(BaseAPI):
                 "indexable": indexable,
                 "fields_attributes": fields_hash,
             },
-            files=files
+            files=files,
+            response_is_list=False
         )
-        return AccountWithSource.model_validate(_json)
+        result = cast(AccountWithSource, await session())
+        return result
 
     async def get_account(self: Accounts, id: str) -> Account:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id,)
+            expected_type=Account,
+            url_parameters=(id,),
+            response_is_list=False
         )
-        return Account.model_validate(_json)
+        result = cast(Account, await session())
+        return result
 
     async def get_accounts(
         self: Accounts,
         ids: list[str]
     ) -> list[Account]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            query_parameters={"id": ids}
+            query_parameters={"id": ids},
+            expected_type=Account,
+            response_is_list=True
         )
-        return [Account.model_validate(account) for account in _json]
+        result = cast(list[Account], await session())
+        return result
 
     async def get_statuses(self: Accounts, id: str) -> list[Status]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id, "statuses")
+            Status,
+            "statuses",
+            url_parameters_after_method=False,
+            url_parameters=(id,),
+            response_is_list=True
         )
-        return [Status.model_validate(status) for status in _json]
+        return cast(list[Status], await session())
 
     async def get_followers(self: Accounts, id: str) -> list[Account]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id, "followers")
+            Account,
+            "followers",
+            url_parameters=(id,),
+            response_is_list=True,
         )
-        return [Account.model_validate(account) for account in _json]
+        return cast(list[Account], await session())
 
     async def get_following(self: Accounts, id: str) -> list[Account]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id, "following")
+            Account,
+            "following",
+            url_parameters=(id,),
+            response_is_list=True,
         )
-        return [Account.model_validate(account) for account in _json]
+        return cast(list[Account], await session())
 
     async def get_featured_tags(
         self: Accounts,
         id: str
     ) -> list[FeaturedTag]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id, "featured_tags")
+            FeaturedTag,
+            "featured_tags",
+            url_parameters=(id,),
         )
-        return [FeaturedTag.model_validate(tag) for tag in _json]
+        return cast(list[FeaturedTag], await session())
 
     async def get_lists_with_account(
         self: Accounts,
         id: str
     ) -> list[AccountsList]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
-            url_parameters=(id, "lists")
+            AccountsList,
+            "lists",
+            url_parameters=(id,),
+            response_is_list=True
         )
-        accounts_lists: list[AccountsList] = []
-        for accounts_list in _json:
-            accounts_lists.append(AccountsList.model_validate(accounts_list))
-        return accounts_lists
+        return cast(list[AccountsList], await session())
 
     async def follow(
             self: Accounts,
@@ -156,127 +180,156 @@ class Accounts(BaseAPI):
             notify: bool,
             languages: list[str]
     ) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "follow"),
+            Relationship,
+            "follow",
+            url_parameters=(id,),
             post_data={
                 "reblogs": reblogs,
                 "notify": notify,
                 "languages": languages
-            }
+            },
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def unfollow(self: Accounts, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "unfollow"),
+            Relationship,
+            "unfollow",
+            url_parameters=(id,),
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def remove_from_followers(
         self: Accounts,
         id: str
     ) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "remove_from_followers"),
+            Relationship,
+            "remove_from_followers",
+            url_parameters=(id,),
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def block(self: Accounts, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "block"),
+            Relationship,
+            "block",
+            url_parameters=(id,),
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def unblock(self: Accounts, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "unblock"),
+            Relationship,
+            "unblock",
+            url_parameters=(id,),
+            response_is_list=False,
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def mute(self: Accounts, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "mute"),
+            Relationship,
+            "mute",
+            url_parameters=(id,),
+            response_is_list=False,
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def unmute(self: Accounts, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "unmute"),
+            Relationship,
+            "unmute",
+            url_parameters=(id,),
+            response_is_list=False,
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def feature(self, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "pin",),
+            Relationship,
+            "pin",
+            url_parameters=(id,),
+            response_is_list=False,
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def unfeature(self, id: str) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "unpin"),
+            Relationship,
+            "unpin",
+            url_parameters=(id,),
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def set_private_note(
         self: Accounts,
         id: str,
         comment: str
     ) -> Relationship:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.POST,
             "accounts",
-            url_parameters=(id, "note"),
-            post_data={"comment": comment}
+            Relationship,
+            "note",
+            url_parameters=(id,),
+            post_data={"comment": comment},
+            response_is_list=False
         )
-        return Relationship.model_validate(_json)
+        return cast(Relationship, await session())
 
     async def relationships(
         self: Accounts,
         ids: list[str],
         with_suspended: bool
     ) -> list[Relationship]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
+            Relationship,
             "relationships",
-            query_parameters={"id": ids, "with_suspended": with_suspended}
+            query_parameters={"id": ids, "with_suspended": with_suspended},
+            response_is_list=True,
         )
-        relationships: list[Relationship] = []
-        for relationship in _json:
-            relationships.append(
-                Relationship.model_validate(relationship)
-            )
-        return relationships
+        return cast(list[Relationship], await session())
 
     async def familiar_followers(
             self: Accounts,
             id: list[str]
     ) -> FamiliarFollowers:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
+            FamiliarFollowers,
             "familiar_followers",
-            query_parameters={"id": id}
+            query_parameters={"id": id},
+            response_is_list=False
         )
-        return FamiliarFollowers.model_validate(_json)
+        return cast(FamiliarFollowers, await session())
 
     async def search(
             self: Accounts,
@@ -286,9 +339,10 @@ class Accounts(BaseAPI):
             resolve: bool = False,
             following: bool = False
     ) -> list[Account]:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
+            Account,
             "search",
             query_parameters={
                 "q": query,
@@ -296,23 +350,23 @@ class Accounts(BaseAPI):
                 "offset": offset,
                 "resolve": resolve,
                 "following": following
-            }
+            },
+            response_is_list=True
         )
-        accounts_list: list[Account] = []
-        for account in _json:
-            accounts_list.append(Account.model_validate(account))
-        return accounts_list
+        return cast(list[Account], await session())
 
     async def lookup(
             self: Accounts,
             acct: str,
     ) -> Account:
-        _json = await self.client(
+        session = await self.client(
             HttpMethods.GET,
             "accounts",
+            Account,
             "lookup",
             query_parameters={
                 "acct": acct,
-            }
+            },
+            response_is_list=False
         )
-        return Account.model_validate(_json)
+        return cast(Account, await session())

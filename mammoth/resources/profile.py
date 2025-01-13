@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING
+from __future__ import annotations
+from typing import TYPE_CHECKING, cast
 
 from ..enums import HttpMethods
 from ..models import CredentialAccount
@@ -11,18 +12,22 @@ class Profiles(BaseAPI):
     def __init__(self, client: "MastodonClient") -> None:
         super().__init__(client)
 
-    async def delete_avatar(self):
-        _json = await self.client(
+    async def delete_avatar(self: Profiles) -> CredentialAccount:
+        session = await self.client(
             HttpMethods.DELETE,
             "profile",
-            "avatar"
+            CredentialAccount,
+            "avatar",
+            response_is_list=False,
         )
-        return CredentialAccount.model_validate(_json)
+        return cast(CredentialAccount, await session())
 
-    async def delete_header(self):
-        _json = await self.client(
+    async def delete_header(self: Profiles) -> CredentialAccount:
+        session = await self.client(
             HttpMethods.DELETE,
             "profile",
-            "header"
+            CredentialAccount,
+            "header",
+            response_is_list=False,
         )
-        return CredentialAccount.model_validate(_json)
+        return cast(CredentialAccount, await session())
