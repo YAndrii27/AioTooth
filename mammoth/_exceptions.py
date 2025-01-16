@@ -20,3 +20,7 @@ class UnprocessableEntity(ApiException):
 
 class ServiceUnavailable(ApiException):
     pass
+
+
+class UnmarchedApiVersion(ApiException):
+    pass

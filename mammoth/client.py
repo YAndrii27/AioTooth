@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import cached_property
 from typing import Optional, Any, Union, TypeVar, Type, overload, Literal
 from pydantic import BaseModel
 import httpx
@@ -62,9 +63,17 @@ class MastodonClient:
 
         self.session = httpx_session
 
-        self.account = Accounts(self)
-        self.profile = Profiles(self)
-        self.statuses = Statuses(self)
+    @cached_property
+    def account(self):
+        return Accounts(self)
+
+    @cached_property
+    def profile(self):
+        return Profiles(self)
+
+    @cached_property
+    def statuses(self):
+        return Statuses(self)
 
     def _assemble_url(
         self: MastodonClient,

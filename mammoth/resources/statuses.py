@@ -15,6 +15,7 @@ from ..models import (
     StatusSource
 )
 from .._exceptions import UnprocessableEntity
+from ..utils import version
 if TYPE_CHECKING:
     from ..client import MastodonClient
 
@@ -23,6 +24,7 @@ class Statuses(BaseAPI):
     def __init__(self: Statuses, client: "MastodonClient") -> None:
         super().__init__(client)
 
+    @version("v1")
     async def post(
             self: Statuses,
             status: Optional[str] = None,
@@ -86,6 +88,7 @@ class Statuses(BaseAPI):
         )
         return cast(ScheduledStatus, await session())
 
+    @version("v1")
     async def get_status(
             self: Statuses,
             id: str,
@@ -99,6 +102,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def get_many_statuses(
             self: Statuses,
             ids: list[str],
@@ -112,6 +116,7 @@ class Statuses(BaseAPI):
         )
         return cast(list[Status], await session())
 
+    @version("v1")
     async def delete(self: Statuses, id: str) -> Status:
         session = await self.client(
             HttpMethods.DELETE,
@@ -122,6 +127,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def get_context(self: Statuses, id: str) -> Context:
         session = await self.client(
             HttpMethods.GET,
@@ -132,6 +138,7 @@ class Statuses(BaseAPI):
         )
         return cast(Context, await session())
 
+    @version("v1")
     async def translate(self: Statuses, id: str, lang: str) -> Translation:
         session = await self.client(
             HttpMethods.POST,
@@ -143,6 +150,7 @@ class Statuses(BaseAPI):
         )
         return cast(Translation, await session())
 
+    @version("v1")
     async def reblogged_by(
             self: Statuses,
             id: str,
@@ -158,6 +166,7 @@ class Statuses(BaseAPI):
         )
         return cast(list[Account], await session())
 
+    @version("v1")
     async def favourited_by(
             self: Statuses,
             id: str,
@@ -173,6 +182,7 @@ class Statuses(BaseAPI):
         )
         return cast(list[Account], await session())
 
+    @version("v1")
     async def favourite(
             self: Statuses,
             id: str,
@@ -186,6 +196,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def unfavourite(
             self: Statuses,
             id: str,
@@ -199,6 +210,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def reblog(
             self: Statuses,
             id: str,
@@ -217,6 +229,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def unreblog(
             self: Statuses,
             id: str,
@@ -230,6 +243,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def bookmark(
             self: Statuses,
             id: str,
@@ -243,6 +257,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def unbookmark(
             self: Statuses,
             id: str,
@@ -256,6 +271,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def mute(
             self: Statuses,
             id: str,
@@ -269,6 +285,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def unmute(
             self: Statuses,
             id: str,
@@ -282,6 +299,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def pin(
             self: Statuses,
             id: str,
@@ -295,6 +313,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def unpin(
             self: Statuses,
             id: str,
@@ -308,6 +327,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def edit(
             self: Statuses,
             status: Optional[str] = None,
@@ -344,6 +364,7 @@ class Statuses(BaseAPI):
         )
         return cast(Status, await session())
 
+    @version("v1")
     async def history(
             self: Statuses,
             id: str
@@ -358,6 +379,7 @@ class Statuses(BaseAPI):
         )
         return cast(list[StatusEdit], await session())
 
+    @version("v1")
     async def source(
             self: Statuses,
             id: str,

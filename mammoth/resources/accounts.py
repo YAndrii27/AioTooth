@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from ..client import MastodonClient
 from .base import BaseAPI
 
+from ..utils import version
 from ..enums import HttpMethods
 from ..models import (
     Account,
@@ -28,6 +29,7 @@ class Accounts(BaseAPI):
     def __init__(self: Accounts, client: "MastodonClient"):
         super().__init__(client)
 
+    @version("v1")
     async def verify_credentials(self: Accounts) -> CredentialAccount:
         session = await self.client(
             HttpMethods.GET,
@@ -39,6 +41,7 @@ class Accounts(BaseAPI):
         result = cast(CredentialAccount, await session())
         return result
 
+    @version("v1")
     async def update_credentials(
             self: Accounts,
             display_name: Optional[str],
@@ -87,6 +90,7 @@ class Accounts(BaseAPI):
         result = cast(AccountWithSource, await session())
         return result
 
+    @version("v1")
     async def get_account(self: Accounts, id: str) -> Account:
         session = await self.client(
             HttpMethods.GET,
@@ -98,6 +102,7 @@ class Accounts(BaseAPI):
         result = cast(Account, await session())
         return result
 
+    @version("v1")
     async def get_accounts(
         self: Accounts,
         ids: list[str]
@@ -112,6 +117,7 @@ class Accounts(BaseAPI):
         result = cast(list[Account], await session())
         return result
 
+    @version("v1")
     async def get_statuses(self: Accounts, id: str) -> list[Status]:
         session = await self.client(
             HttpMethods.GET,
@@ -124,6 +130,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[Status], await session())
 
+    @version("v1")
     async def get_followers(self: Accounts, id: str) -> list[Account]:
         session = await self.client(
             HttpMethods.GET,
@@ -135,6 +142,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[Account], await session())
 
+    @version("v1")
     async def get_following(self: Accounts, id: str) -> list[Account]:
         session = await self.client(
             HttpMethods.GET,
@@ -146,6 +154,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[Account], await session())
 
+    @version("v1")
     async def get_featured_tags(
         self: Accounts,
         id: str
@@ -159,6 +168,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[FeaturedTag], await session())
 
+    @version("v1")
     async def get_lists_with_account(
         self: Accounts,
         id: str
@@ -173,6 +183,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[AccountsList], await session())
 
+    @version("v1")
     async def follow(
             self: Accounts,
             id: str,
@@ -195,6 +206,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def unfollow(self: Accounts, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -206,6 +218,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def remove_from_followers(
         self: Accounts,
         id: str
@@ -220,6 +233,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def block(self: Accounts, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -231,6 +245,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def unblock(self: Accounts, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -242,6 +257,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def mute(self: Accounts, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -253,6 +269,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def unmute(self: Accounts, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -264,6 +281,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def feature(self, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -275,6 +293,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def unfeature(self, id: str) -> Relationship:
         session = await self.client(
             HttpMethods.POST,
@@ -286,6 +305,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def set_private_note(
         self: Accounts,
         id: str,
@@ -302,6 +322,7 @@ class Accounts(BaseAPI):
         )
         return cast(Relationship, await session())
 
+    @version("v1")
     async def relationships(
         self: Accounts,
         ids: list[str],
@@ -317,6 +338,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[Relationship], await session())
 
+    @version("v1")
     async def familiar_followers(
             self: Accounts,
             id: list[str]
@@ -331,6 +353,7 @@ class Accounts(BaseAPI):
         )
         return cast(FamiliarFollowers, await session())
 
+    @version("v1")
     async def search(
             self: Accounts,
             query: str,
@@ -355,6 +378,7 @@ class Accounts(BaseAPI):
         )
         return cast(list[Account], await session())
 
+    @version("v1")
     async def lookup(
             self: Accounts,
             acct: str,
