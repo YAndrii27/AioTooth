@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mammoth"
 version = "0.1.0"
-description = "Asyn python library for work with mastodon API"
+description = "Async python library for work with mastodon API"
 authors = ["Andrii Yashchishen <AndriiYashchishen@protonmail.com>"]
 readme = "README.md"
 

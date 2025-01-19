@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Any, Union
+from typing import Any, Union
 from pydantic import BaseModel
 import httpx
 
@@ -44,9 +44,9 @@ class Session[ReturnType: BaseModel]:
             http_method: str,
             url: str,
             headers: dict[str, str],
-            params: Optional[dict[str, query_param_values]] = None,
-            data: Optional[dict[str, post_data_values]] = None,
-            files: Optional[dict[str, bytes]] = None,
+            params: dict[str, query_param_values] | None = None,
+            data: dict[str, post_data_values] | None = None,
+            files: dict[str, bytes] | None = None,
             response_is_list: bool = False,
     ) -> None:
         self.httpx_session = httpx_session
@@ -63,7 +63,7 @@ class Session[ReturnType: BaseModel]:
         self,
         response_json: Any,
         response_is_list: bool,
-    ) -> Union[ReturnType, list[ReturnType]]:
+    ) -> ReturnType | list[ReturnType]:
         if response_is_list:
             parsed_list: list[ReturnType] = []
             for item in response_json:
@@ -74,7 +74,7 @@ class Session[ReturnType: BaseModel]:
 
     async def __call__(
             self,
-    ) -> Union[ReturnType, list[ReturnType]]:
+    ) -> ReturnType | list[ReturnType]:
         response = await self.httpx_session.request(
             self.http_method,
             self.url,

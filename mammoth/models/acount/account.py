@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Optional
 from pydantic import BaseModel, field_validator
 from datetime import datetime
 
@@ -10,27 +9,27 @@ from ... import utils
 
 class Account(BaseModel):
     id: int
-    username: Optional[str]
+    username: str | None
     acct: str
     url: str
-    display_name: Optional[str]
-    note: Optional[str]
-    avatar: Optional[str]
-    avatar_static: Optional[str]
-    header: Optional[str]
-    header_static: Optional[str]
+    display_name: str | None
+    note: str | None
+    avatar: str | None
+    avatar_static: str | None
+    header: str | None
+    header_static: str | None
     locked: bool
     fields: list[Field]
     emojis: list[CustomEmoji]
     bot: bool
     group: bool
-    discoverable: Optional[bool]
-    noindex: Optional[bool]
-    moved: Optional[Account] = None
-    suspended: Optional[bool] = False
-    limited: Optional[bool] = False
+    discoverable: bool | None
+    noindex: bool | None
+    moved: Account | None = None
+    suspended: bool | None = False
+    limited: bool | None = False
     created_at: datetime
-    last_status_at: Optional[str]
+    last_status_at: str | None
     statuses_count: int
     followers_count: int
     following_count: int
@@ -38,6 +37,6 @@ class Account(BaseModel):
     @field_validator("created_at", mode="before")
     @classmethod
     def parse_date(cls, v: str):
-        if isinstance(v, str):
+        if isinstance(v, str):  # type: ignore
             return utils.from_string_to_datetime(v)
         raise ValueError(f"{v} is not datetime string")

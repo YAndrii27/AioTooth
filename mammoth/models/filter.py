@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 from ..enums import Context, FilterAction
@@ -10,7 +9,7 @@ class Filter(BaseModel):
     id: str
     title: str
     context: Context
-    expires_at: Optional[str]
+    expires_at: str | None
     filter_action: FilterAction
     keywords: FilterKeyword
     statuses: FilterStatus

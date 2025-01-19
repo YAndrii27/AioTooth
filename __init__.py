@@ -1,5 +1,6 @@
-from .mammoth import MastodonClient
+from .mammoth import MastodonClient, MastodonApp
 
 __all__ = [
-    "MastodonClient"
+    "MastodonClient",
+    "MastodonApp"
 ]

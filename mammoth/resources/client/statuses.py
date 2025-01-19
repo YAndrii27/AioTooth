@@ -1,10 +1,10 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional, cast
+from typing import TYPE_CHECKING, cast
 
-from .base import BaseAPI
-from ..enums import StatusVisibility, HttpMethods
-from ..models import (
+from .base import BaseClientResource
+from ...enums import StatusVisibility, HttpMethods
+from ...models import (
     NewPoll,
     Status,
     ScheduledStatus,
@@ -14,29 +14,29 @@ from ..models import (
     StatusEdit,
     StatusSource
 )
-from .._exceptions import UnprocessableEntity
-from ..utils import version
+from ..._exceptions import UnprocessableEntity
+from ...utils import version
 if TYPE_CHECKING:
-    from ..client import MastodonClient
+    from ...client import MastodonClient
 
 
-class Statuses(BaseAPI):
+class Statuses(BaseClientResource):
     def __init__(self: Statuses, client: "MastodonClient") -> None:
         super().__init__(client)
 
     @version("v1")
     async def post(
             self: Statuses,
-            status: Optional[str] = None,
-            media_ids: Optional[list[str]] = None,
-            poll: Optional[NewPoll] = None,
-            in_reply_to_id: Optional[int] = None,
-            spoiler_text: Optional[str] = None,
-            visibility: Optional[StatusVisibility | str] = None,
-            sensitive: Optional[bool] = False,
-            language: Optional[str] = None,
-            scheduled_at: Optional[datetime | str] = None,
-            idempotency_key: Optional[str] = None,
+            status: str | None = None,
+            media_ids: list[str] | None = None,
+            poll: NewPoll | None = None,
+            in_reply_to_id: int | None = None,
+            spoiler_text: str | None = None,
+            visibility: StatusVisibility | str | None = None,
+            sensitive: bool | None = False,
+            language: str | None = None,
+            scheduled_at: datetime | str | None = None,
+            idempotency_key: str | None = None,
     ) -> Status | ScheduledStatus:
         if all((not status, not media_ids, not poll)):
             raise UnprocessableEntity("Status content may not be empty")
@@ -330,15 +330,15 @@ class Statuses(BaseAPI):
     @version("v1")
     async def edit(
             self: Statuses,
-            status: Optional[str] = None,
-            media_ids: Optional[list[str]] = None,
-            media_attributes: Optional[list[str]] = None,
-            poll: Optional[NewPoll] = None,
-            in_reply_to_id: Optional[int] = None,
-            spoiler_text: Optional[str] = None,
-            visibility: Optional[StatusVisibility | str] = None,
-            sensitive: Optional[bool] = False,
-            language: Optional[str] = None,
+            status: str | None = None,
+            media_ids: list[str] | None = None,
+            media_attributes: list[str] | None = None,
+            poll: NewPoll | None = None,
+            in_reply_to_id: int | None = None,
+            spoiler_text: str | None = None,
+            visibility: StatusVisibility | str | None = None,
+            sensitive: bool | None = False,
+            language: str | None = None,
     ) -> Status:
         if isinstance(visibility, StatusVisibility):
             visibility = visibility.value

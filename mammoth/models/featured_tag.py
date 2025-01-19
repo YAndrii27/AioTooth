@@ -13,6 +13,6 @@ class FeaturedTag(BaseModel):
     @field_validator("last_status_at", mode="before")
     @classmethod
     def parse_date(cls, v: str):
-        if isinstance(v, str):
+        if isinstance(v, str):  # type: ignore
             return utils.from_string_to_datetime(v)
         raise ValueError(f"{v} is not datetime string")

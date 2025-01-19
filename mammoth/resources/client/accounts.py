@@ -1,13 +1,13 @@
 from __future__ import annotations
-from typing import Optional, Any, Union, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from ..client import MastodonClient
-from .base import BaseAPI
+    from ...client import MastodonClient
+from .base import BaseClientResource
 
-from ..utils import version
-from ..enums import HttpMethods
-from ..models import (
+from ...utils import version
+from ...enums import HttpMethods
+from ...models import (
     Account,
     CredentialAccount,
     AccountWithSource,
@@ -20,11 +20,11 @@ from ..models import (
 )
 
 
-query_param_values = Union[str, list[str], bool, int]
-post_data_values = Union[str, bool, list[str], bytes, dict[str, Any]]
+query_param_values = str | list[str] | bool | int
+post_data_values = str | bool | list[str] | bytes | dict[str, Any]
 
 
-class Accounts(BaseAPI):
+class Accounts(BaseClientResource):
 
     def __init__(self: Accounts, client: "MastodonClient"):
         super().__init__(client)
@@ -44,11 +44,11 @@ class Accounts(BaseAPI):
     @version("v1")
     async def update_credentials(
             self: Accounts,
-            display_name: Optional[str],
-            note: Optional[str],
-            avatar: Optional[bytes],
-            header: Optional[bytes],
-            locked: Optional[bool],
+            display_name: str | None,
+            note: str | None,
+            avatar: bytes | None,
+            header: bytes | None,
+            locked: bool | None,
             bot: bool,
             discoverable: bool,
             hide_collections: bool,

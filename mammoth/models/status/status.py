@@ -1,4 +1,4 @@
-from typing import Optional, Self
+from typing import Self
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -19,27 +19,27 @@ class Status(BaseModel):
     content: str
     visibility: StatusVisibility
     sensitive: bool
-    spoiler_text: Optional[str]
+    spoiler_text: str | None
     media_attachments: list[str]
-    application: Optional[dict[str, str | None]]
+    application: dict[str, str | None] | None
     mentions: list[StatusMentions]
     tags: list[StatusTag]
     emojis: list[CustomEmoji]
     reblogs_count: int
     favourites_count: int
     replies_count: int
-    url: Optional[str]
-    in_reply_to_id: Optional[str]
-    in_reply_to_account_id: Optional[str]
-    reblog: Optional[Self]
-    poll: Optional[Poll]
-    card: Optional[PreviewCard]
-    language: Optional[str]
-    text: Optional[str] = None
-    edited_at: Optional[datetime]
-    favourited: Optional[bool]
-    reblogged: Optional[bool]
-    muted: Optional[bool]
-    bookmarked: Optional[bool]
-    pinned: Optional[bool]
-    filtered: Optional[list[FilterResult]]
+    url: str | None
+    in_reply_to_id: str | None
+    in_reply_to_account_id: str | None
+    reblog: Self | None
+    poll: Poll | None
+    card: PreviewCard | None
+    language: str | None
+    text: str | None = None
+    edited_at: datetime | None
+    favourited: bool | None
+    reblogged: bool | None
+    muted: bool | None
+    bookmarked: bool | None
+    pinned: bool | None
+    filtered: list[FilterResult] | None

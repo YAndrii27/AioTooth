@@ -1,9 +1,7 @@
-from .accounts import Accounts
-from .profile import Profiles
-from .statuses import Statuses
+from . import client
+from . import app
 
 __all__ = [
-    "Accounts",
-    "Profiles",
-    "Statuses"
+    "client",
+    "app",
 ]

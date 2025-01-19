@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 from ..media_attachment import MediaAttachment
@@ -7,16 +6,16 @@ from ..poll import NewPoll
 
 class ScheduledStatusParams(BaseModel):
     text: str
-    poll: Optional[NewPoll]
-    media_ids: Optional[list[str]]
-    sensitive: Optional[bool]
-    spoiler_text: Optional[str]
+    poll: NewPoll | None
+    media_ids: list[str] | None
+    sensitive: bool | None
+    spoiler_text: str | None
     visibility: str
-    in_reply_to_id: Optional[int]
-    language: Optional[str]
+    in_reply_to_id: int | None
+    language: str | None
     application_id: int
     scheduled_at: None
-    idempotency: Optional[str]
+    idempotency: str | None
     with_rate_limit: bool
 
 

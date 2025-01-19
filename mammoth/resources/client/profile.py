@@ -1,15 +1,15 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
-from ..enums import HttpMethods
-from ..models import CredentialAccount
-from ..utils import version
-from .base import BaseAPI
+from ...enums import HttpMethods
+from ...models import CredentialAccount
+from ...utils import version
+from .base import BaseClientResource
 if TYPE_CHECKING:
-    from ..client import MastodonClient
+    from ...client import MastodonClient
 
 
-class Profiles(BaseAPI):
+class Profiles(BaseClientResource):
     def __init__(self, client: "MastodonClient") -> None:
         super().__init__(client)
 

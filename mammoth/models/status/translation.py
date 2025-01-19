@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -19,7 +18,7 @@ class Attachment(BaseModel):
 class Translation(BaseModel):
     content: str
     spoiler_text: str
-    poll: Optional[Poll]
-    media_attachments: Optional[Attachment]
+    poll: Poll | None
+    media_attachments: Attachment | None
     detected_source_language: str
     provider: str

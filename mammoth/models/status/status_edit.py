@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Any
 from pydantic import BaseModel
 
 from ..acount import Account
@@ -12,6 +12,6 @@ class StatusEdit(BaseModel):
     sensitive: str
     created_at: str
     account: Account
-    poll: Optional[dict[str, Any]]  # TODO: make better typing
+    poll: dict[str, Any] | None  # TODO: make better typing
     media_attachments: list[MediaAttachment]
     emoji: list[CustomEmoji]

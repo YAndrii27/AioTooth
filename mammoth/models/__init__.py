@@ -1,6 +1,6 @@
 from .field import Field
 from .accounts_list import AccountsList
-from .acount import Account, AccountWithSource, CredentialAccount
+from .acount import Account, AccountWithSource, CredentialAccount, Token
 from .familiar_followers import FamiliarFollowers
 from .featured_tag import FeaturedTag
 from .relationship import Relationship
@@ -34,5 +34,6 @@ __all__ = [
     "Context",
     "Translation",
     "StatusEdit",
-    "StatusSource"
+    "StatusSource",
+    "Token"
 ]
