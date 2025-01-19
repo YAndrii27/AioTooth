@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Any, TypeVar, Union
+from typing import Any, TypeVar, Union
 from pydantic import BaseModel
 import httpx
 
@@ -30,7 +30,7 @@ class BaseInteractor:
             instance_url: str,
             api_version: str,
             token: str,
-            httpx_session: Optional[httpx.AsyncClient] = None
+            httpx_session: httpx.AsyncClient | None = None
     ) -> None:
         self.instance_url = instance_url
         self.api_version = api_version
@@ -48,7 +48,7 @@ class BaseInteractor:
         self: BaseInteractor,
         scope: str,
         method: str,
-        url_parameters: Optional[tuple[str, ...]] = None,
+        url_parameters: tuple[str, ...] | None = None,
         url_parameters_after_method: bool = False,
     ) -> str:
         _url_parameters: str = ""
@@ -100,11 +100,11 @@ class BaseInteractor:
             scope: str,
             expected_type: type[T],
             method: str = "",
-            url_parameters: Optional[tuple[str, ...]] = None,
-            query_parameters: Optional[dict[str, query_param_values]] = None,
-            post_data: Optional[dict[str, post_data_values]] = None,
-            files: Optional[dict[str, bytes]] = None,
-            custom_headers: Optional[dict[str, str]] = None,
+            url_parameters: tuple[str, ...] | None = None,
+            query_parameters: dict[str, query_param_values] | None = None,
+            post_data: dict[str, post_data_values] | None = None,
+            files: dict[str, bytes] | None = None,
+            custom_headers: dict[str, str] | None = None,
             url_parameters_after_method: bool = False,
             response_is_list: bool = False,
     ) -> Session[T]:

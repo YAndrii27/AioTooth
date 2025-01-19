@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -7,12 +6,12 @@ from ..custom_emoji import CustomEmoji
 
 class Poll(BaseModel):
     id: str
-    expires_at: Optional[datetime]
+    expires_at: datetime | None
     expired: bool
     multiple: bool
     votes_count: int
-    voters_count: Optional[int]
+    voters_count: int | None
     options: list[str]
     emoji: CustomEmoji
-    voted: Optional[bool]
-    own_votes: Optional[list[int]]
+    voted: bool | None
+    own_votes: list[int] | None

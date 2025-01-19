@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 from ...enums.preview_type import PreviewType
@@ -17,6 +16,6 @@ class PreviewCard(BaseModel):
     html: str
     width: int
     height: int
-    image: Optional[str]
+    image: str | None
     embed_url: str
-    blurhash: Optional[str]
+    blurhash: str | None

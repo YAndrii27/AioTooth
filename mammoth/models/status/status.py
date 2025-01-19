@@ -8,7 +8,7 @@ from ..poll import Poll
 from ..custom_emoji import CustomEmoji
 from . import StatusMentions, StatusTag
 from ..acount import Account
-from ..filter_result import FilterResult
+from ..filter import FilterResult
 
 
 class Status(BaseModel):
