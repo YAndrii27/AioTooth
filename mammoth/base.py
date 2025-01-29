@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar
 from pydantic import BaseModel
 import httpx
 
@@ -7,19 +7,17 @@ from .enums import HttpMethods
 from .session import Session
 
 
-query_param_values = Union[str, list[str], bool, int]
-post_data_values = Union[
-    str,
-    int,
-    bool,
-    list[str],
-    bytes,
-    dict[str, Any],
-    BaseModel,
-    list[BaseModel],
-    dict[str, BaseModel],
-    None,
-]
+query_param_values = str | list[str] | bool | int
+post_data_values = str \
+    | int \
+    | bool \
+    | list[str] \
+    | bytes \
+    | dict[str, Any] \
+    | BaseModel \
+    | list[BaseModel] \
+    | dict[str, BaseModel] \
+    | None
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -80,25 +78,11 @@ class BaseInteractor:
             )
         return full_url
 
-    def _validate_response(
-        self: BaseInteractor,
-        response_json: Any,
-        expected_types: type[T],
-        response_is_list: bool,
-    ) -> T | list[T]:
-        if response_is_list:
-            parsed_list: list[T] = []
-            for item in response_json:
-                item: Any
-                parsed_list.append(expected_types.model_validate(item))
-            return parsed_list
-        return expected_types.model_validate(response_json)
-
     async def __call__(
             self: BaseInteractor,
             http_method: HttpMethods,
             scope: str,
-            expected_type: type[T],
+            expected_type: type[T] | None,
             method: str = "",
             url_parameters: tuple[str, ...] | None = None,
             query_parameters: dict[str, query_param_values] | None = None,
@@ -107,7 +91,7 @@ class BaseInteractor:
             custom_headers: dict[str, str] | None = None,
             url_parameters_after_method: bool = False,
             response_is_list: bool = False,
-    ) -> Session[T]:
+    ) -> Session[T | None]:
         url = self._assemble_url(
             scope=scope,
             method=method,

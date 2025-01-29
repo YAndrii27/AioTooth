@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, Union
+from typing import Any, TypeVar
 from pydantic import BaseModel
 import httpx
 
@@ -12,22 +12,22 @@ from ._exceptions import (
     ServiceUnavailable
 )
 
-query_param_values = Union[str, list[str], bool, int]
-post_data_values = Union[
-    str,
-    int,
-    bool,
-    list[str],
-    bytes,
-    dict[str, Any],
-    BaseModel,
-    list[BaseModel],
-    dict[str, BaseModel],
-    None,
-]
+query_param_values = str | list[str] | bool | int
+post_data_values = str \
+    | int \
+    | bool \
+    | list[str] \
+    | bytes \
+    | dict[str, Any] \
+    | BaseModel \
+    | list[BaseModel] \
+    | dict[str, BaseModel] \
+    | None
+
+T = TypeVar("T", BaseModel, None)
 
 
-class Session[ReturnType: BaseModel]:
+class Session[T]:
 
     exceptions: dict[int, type[ApiException]] = {
         401: Unauthorized,
@@ -39,7 +39,7 @@ class Session[ReturnType: BaseModel]:
 
     def __init__(
             self,
-            expected_type: type[ReturnType],
+            expected_type: type[T] | None,
             httpx_session: httpx.AsyncClient,
             http_method: str,
             url: str,
@@ -63,18 +63,20 @@ class Session[ReturnType: BaseModel]:
         self,
         response_json: Any,
         response_is_list: bool,
-    ) -> ReturnType | list[ReturnType]:
-        if response_is_list:
-            parsed_list: list[ReturnType] = []
-            for item in response_json:
-                item: Any
-                parsed_list.append(self.expected.model_validate(item))
-            return parsed_list
-        return self.expected.model_validate(response_json)
+    ) -> T | list[T] | None:
+        if self.expected is BaseModel:
+            if response_is_list:
+                parsed_list: list[T] = []
+                for item in response_json:
+                    item: Any
+                    validated_model = self.expected.model_validate(item)
+                    parsed_list.append(validated_model)
+                return parsed_list
+            return self.expected.model_validate(response_json)
 
     async def __call__(
             self,
-    ) -> ReturnType | list[ReturnType]:
+    ) -> T | list[T] | None:
         response = await self.httpx_session.request(
             self.http_method,
             self.url,

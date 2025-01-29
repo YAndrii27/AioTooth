@@ -15,6 +15,7 @@ from .status import (
 )
 from .poll import Poll, NewPoll
 from .context import Context
+from .domain import Domain
 
 __all__ = [
     "Field",
@@ -35,5 +36,6 @@ __all__ = [
     "Translation",
     "StatusEdit",
     "StatusSource",
-    "Token"
+    "Token",
+    "Domain"
 ]

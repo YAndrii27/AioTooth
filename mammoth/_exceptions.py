@@ -22,5 +22,5 @@ class ServiceUnavailable(ApiException):
     pass
 
 
-class UnmarchedApiVersion(ApiException):
+class UnmatchedApiVersion(ApiException):
     pass
